@@ -19,31 +19,7 @@ namespace LibraryMgmt.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GetBooks() {
             {
-                var response = new List<Book>
-                {
-                    new Book
-                    {
-                        Id = 1,
-                        Title = "Twilight",
-                        Author = "Stephenie Meyer",
-                        PublishedDate = new DateTime(2005, 9, 27),
-                        Genre = "Romance",
-                        IsAvailable = true,
-                        Quantity = 5,
-                        Price = 10.99m
-                    },
-                    new Book
-                    {
-                        Id = 2,
-                        Title = "1984",
-                        Author = "George Orwell",
-                        PublishedDate = new DateTime(1949, 6, 8),
-                        Genre = "Dystopian",
-                        IsAvailable = true,
-                        Quantity = 3,
-                        Price = 8.99m
-                    }
-                };
+                var response = BookStorage.Books;
 
                 return Ok(response);
             }
@@ -59,6 +35,10 @@ namespace LibraryMgmt.Controllers
                 return BadRequest("Invalid book data.");
             }
 
+            book.Id = BookStorage.Books.Any() ? BookStorage.Books.Max(b => b.Id) + 1 : 1;
+
+            BookStorage.Books.Add(book);
+
             return CreatedAtAction(nameof(GetBooks), new { id = book.Id }, book);
         }
 
@@ -73,8 +53,22 @@ namespace LibraryMgmt.Controllers
             {
                 return BadRequest("Invalid book data.");
             }
-            
-            return Ok(book);
+
+            var existingBook = BookStorage.Books.FirstOrDefault(b => b.Id == id);
+            if (existingBook == null)
+            {
+                return NotFound($"Book with ID {id} not found.");
+            }
+
+            existingBook.Title = book.Title;
+            existingBook.Author = book.Author;
+            existingBook.PublishedDate = book.PublishedDate;
+            existingBook.Genre = book.Genre;
+            existingBook.IsAvailable = book.IsAvailable;
+            existingBook.Quantity = book.Quantity;
+            existingBook.Price = book.Price;
+
+            return Ok(existingBook);
         }
 
         [HttpDelete("{id}")]
@@ -85,10 +79,48 @@ namespace LibraryMgmt.Controllers
         {
             if (id <= 0)
             {
-                return NotFound("Book not found.");
+                return BadRequest("Invalid book ID.");
             }
+
+            var book = BookStorage.Books.FirstOrDefault(b => b.Id == id);
+            if (book == null)
+            {
+                return NotFound($"Book with ID {id} not found.");
+            }
+
+            BookStorage.Books.Remove(book);
 
             return NoContent();
         }
+    }
+
+    public static class BookStorage
+    {
+        public static List<Book> Books { get; } = new List<Book>
+    {
+        new Book
+        {
+            Id = 1,
+            Title = "Twilight",
+            Author = "Stephenie Meyer",
+            PublishedDate = new DateTime(2005, 9, 27),
+            Genre = "Romance",
+            IsAvailable = true,
+            Quantity = 5,
+            Price = 10.99m
+        },
+        new Book
+        {
+            Id = 2,
+            Title = "1984",
+            Author = "George Orwell",
+            PublishedDate = new DateTime(1949, 6, 8),
+            Genre = "Dystopian",
+            IsAvailable = true,
+            Quantity = 3,
+            Price = 8.99m
+        }
+        };
+
     }
 }
