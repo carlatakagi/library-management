@@ -97,29 +97,40 @@ namespace LibraryMgmt.Controllers
     public static class BookStorage
     {
         public static List<Book> Books { get; } = new List<Book>
-    {
-        new Book
         {
-            Id = 1,
-            Title = "Twilight",
-            Author = "Stephenie Meyer",
-            PublishedDate = new DateTime(2005, 9, 27),
-            Genre = "Romance",
-            IsAvailable = true,
-            Quantity = 5,
-            Price = 10.99m
-        },
-        new Book
-        {
-            Id = 2,
-            Title = "1984",
-            Author = "George Orwell",
-            PublishedDate = new DateTime(1949, 6, 8),
-            Genre = "Dystopian",
-            IsAvailable = true,
-            Quantity = 3,
-            Price = 8.99m
-        }
+            new Book
+            {
+                Id = 1,
+                Title = "Twilight",
+                Author = "Stephenie Meyer",
+                PublishedDate = new DateTime(2005, 9, 27),
+                Genre = "Romance",
+                IsAvailable = true,
+                Quantity = 5,
+                Price = 10.99m
+            },
+            new Book
+            {
+                Id = 2,
+                Title = "1984",
+                Author = "George Orwell",
+                PublishedDate = new DateTime(1949, 6, 8),
+                Genre = "Dystopian",
+                IsAvailable = true,
+                Quantity = 3,
+                Price = 8.99m
+            },
+            new Book
+            {
+                Id = 2,
+                Title = "Animal",
+                Author = "Lisa Taddeo",
+                PublishedDate = new DateTime(2021, 6, 8),
+                Genre = "Novel",
+                IsAvailable = true,
+                Quantity = 3,
+                Price = 18.99m
+            }
         };
 
     }
